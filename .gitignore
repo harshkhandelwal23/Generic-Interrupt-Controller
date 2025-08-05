@@ -1,0 +1,16 @@
+# .gitignore
+*.log
+*.vcd
+*.wlf
+*.bak
+*.sv~
+*.out
+*.jou
+*.pb
+*.key
+*.bin
+*.vvp
+*.fst
+work/
+vsim*
+transcript
