@@ -7,6 +7,7 @@ package pkg;
   `include "../SEQ_LIB/reg_seq_item.sv"
   `include "reg_adapter.sv"
   `include "../SEQ_LIB/reg_seq.sv"
+  `include "../SEQ_LIB/read_status_seq.sv"
   `include "reg_seqr.sv"
   `include "reg_driver.sv"
   `include "reg_monitor.sv"

@@ -7,7 +7,7 @@ interface reg_if(input logic clk, rst_n);
   logic [31:0] rdata;
 
   clocking driver_cb @(posedge clk);
-    default input #1 output #1;
+    default input #0 output #0;
     output addr;
     output wr_en;
     output rd_en;
@@ -16,7 +16,7 @@ interface reg_if(input logic clk, rst_n);
   endclocking
 
   clocking monitor_cb @(posedge clk);
-    default input #1 output #1;
+    default input #0 output #0;
     input addr;
     input wr_en;
     input rd_en;

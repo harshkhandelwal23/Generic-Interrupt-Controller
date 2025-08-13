@@ -32,11 +32,11 @@ class interrupt_monitor extends uvm_monitor;
     super.run_phase(phase);
     forever 
       begin
-        @(vif.cb_mon);
+        @(posedge vif.clk)
           if(vif.cb_mon.int_in)
           begin
           item = interrupt_seq_item#()::type_id::create("item");
-          item.int_in = vif.cb_mon.int_in;
+          item.int_in = vif.int_in;
           `uvm_info(get_type_name(), $sformatf("Sampled int_in = %0b at time %0t", item.int_in, $time), UVM_MEDIUM);
           mon_ap.write(item);
       end

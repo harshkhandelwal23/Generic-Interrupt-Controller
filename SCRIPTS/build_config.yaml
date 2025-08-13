@@ -1,0 +1,23 @@
+paths:
+  package: /home/harsh-khandelwal/UVM/UVM_PROJECT/SV/ENV/package.svh
+  interface: /home/harsh-khandelwal/UVM/UVM_PROJECT/SV/ENV/interrupt_if.sv
+  reg_if: /home/harsh-khandelwal/UVM/UVM_PROJECT/SV/ENV/reg_if.sv
+  rtl: /home/harsh-khandelwal/UVM/UVM_PROJECT/SVE/reg_core.sv
+  top: /home/harsh-khandelwal/UVM/UVM_PROJECT/TOP/tb_top.sv
+
+compile:
+  incdirs:
+    - /home/harsh-khandelwal/Downloads/uvm-1.2/src
+  extra_files:
+    - /home/harsh-khandelwal/Downloads/uvm-1.2/src/dpi/uvm_dpi.cc
+  ccflags:
+    - -Wno-missing-declarations
+    - -Wno-maybe-uninitialized
+    - -Wno-return-type
+    - -Wformat-overflow=0
+    - -DQUESTA
+
+sim:
+  testname: sanity_test
+  seed: 100
+  waves: 0

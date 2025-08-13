@@ -1,3 +1,6 @@
+//----------------------------------------------------------------------------------------------------//
+// File Name : Interrupt env.sv
+// ---------------------------------------------------------------------------------------------------//
 class interrupt_env extends uvm_env;
   `uvm_component_utils(interrupt_env)
 
@@ -8,7 +11,7 @@ class interrupt_env extends uvm_env;
   reg_agent reg_agt;
 
   // Scoreboard for checking functional correctness
-  intc_scoreboard scb;
+  intc_scoreboard #(10,8,32) scb;
 
   // Register block handle
   intc_reg_block reg_block;
@@ -40,7 +43,7 @@ class interrupt_env extends uvm_env;
     reg_adap = reg_adapter::type_id::create("reg_adap", this);
 
     // Create scoreboard
-    scb = intc_scoreboard::type_id::create("scb", this);
+    scb = intc_scoreboard#()::type_id::create("scb", this);
   endfunction
 
   virtual function void connect_phase(uvm_phase phase);

@@ -1,0 +1,19 @@
+../SV/ENV/reg_driver.sv:42:            reg_vif.driver_cb.addr  <= 0; //Reset condition
+../SV/ENV/reg_driver.sv:43:            reg_vif.driver_cb.wr_en <= 0;
+../SV/ENV/reg_driver.sv:44:            reg_vif.driver_cb.rd_en <= 0;
+../SV/ENV/reg_driver.sv:45:            reg_vif.driver_cb.wdata <= 0;
+../SV/ENV/reg_driver.sv:52:            @(reg_vif.driver_cb);
+../SV/ENV/reg_driver.sv:54:            reg_vif.driver_cb.addr  <= item.addr;
+../SV/ENV/reg_driver.sv:55:            reg_vif.driver_cb.wdata <= item.wdata;
+../SV/ENV/reg_driver.sv:58:              reg_vif.driver_cb.wr_en <= 1;
+../SV/ENV/reg_driver.sv:59:              reg_vif.driver_cb.rd_en <= 0;
+../SV/ENV/reg_driver.sv:64:              reg_vif.driver_cb.rd_en <= 1;
+../SV/ENV/reg_driver.sv:65:              reg_vif.driver_cb.wr_en <= 0;
+../SV/ENV/reg_driver.sv:69:            //@(reg_vif.driver_cb);
+../SV/ENV/reg_driver.sv:73:            //    item.rdata = reg_vif.driver_cb.rdata;
+../SV/ENV/reg_driver.sv:76:            //reg_vif.driver_cb.wr_en <= 0;
+../SV/ENV/reg_driver.sv:77:            //reg_vif.driver_cb.rd_en <= 0;
+../SV/ENV/reg_driver.sv:78:            //@(reg_vif.driver_cb); // Ensure signals settle
+../SV/ENV/reg_if.sv:9:  clocking driver_cb @(posedge clk);
+../SV/ENV/reg_if.sv:27:  modport DRIVER  (clocking driver_cb);
+../SCRIPTS/transcript:22:add wave -position insertpoint vsim:/tb_top/reg_vif/driver_cb/*

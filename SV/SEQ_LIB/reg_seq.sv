@@ -1,18 +1,27 @@
+//----------------------------------------------------------------------------------------------------//
+// File Name : Reg Sequence.sv
+// ---------------------------------------------------------------------------------------------------//
 class reg_seq extends uvm_sequence #(reg_seq_item);
   `uvm_object_utils(reg_seq)
 
   intc_reg_block reg_block;
 
+//----------------------------------------------------------------------------------------------------//
+// Constructor 
+// ---------------------------------------------------------------------------------------------------//
   function new(string name = "reg_seq");
     super.new(name);
   endfunction
 
+//----------------------------------------------------------------------------------------------------//
+// Body Task for write and read on Registers 
+// ---------------------------------------------------------------------------------------------------//
   virtual task body();
     uvm_status_e status;
     uvm_reg_data_t rdata;
 
     // INT_ENABLE
-    reg_block.int_enable.write(status, 32'h4);
+    reg_block.int_enable.write(status, 32'h3);
     reg_block.int_enable.read(status, rdata);
     `uvm_info("reg_seq", $sformatf("int_enable = %0b", rdata), UVM_NONE);
       
@@ -37,13 +46,5 @@ class reg_seq extends uvm_sequence #(reg_seq_item);
     reg_block.pulse_width.read(status, rdata);
     `uvm_info("reg_seq", $sformatf("pulse_width = %0b", rdata), UVM_NONE);
 
-    // INT_CLEAR (Write 1 to clear all pending status)
-    reg_block.int_clear.write(status, 32'hFFFF);
-    reg_block.int_clear.read(status, rdata);
-    `uvm_info("reg_seq", $sformatf("int_clear = %0b", rdata), UVM_NONE);
-    
-    //INT STATUS REGISTER
-    reg_block.int_status.read(status, rdata);
-    `uvm_info("reg_seq", $sformatf("int_status = %0b", rdata), UVM_NONE);
-  endtask
+    endtask
 endclass
