@@ -1,4 +1,4 @@
-class reg_sequencer extends uvm_sequencer#(reg_seq_item);
+class reg_sequencer extends uvm_sequencer#(reg_seq_item); //TODO : COMMENTS
 
   `uvm_component_utils(reg_sequencer) 
 

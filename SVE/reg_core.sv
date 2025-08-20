@@ -75,8 +75,9 @@ module reg_core #(
             out_mode_reg     <= 1'b0;
             out_polarity_reg <= 1'b0;
             pulse_width_reg  <= '0;
-            for (int i = 0; i < N; i++)
+            for (int i = 0; i < N; i++) begin
                 int_priority_reg[i] <= '0;
+        end
         end else begin
             int_clear_reg <= '0; // auto-clear W1C
             if (wr_en) begin

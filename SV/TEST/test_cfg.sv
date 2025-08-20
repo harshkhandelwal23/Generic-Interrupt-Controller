@@ -1,32 +1,88 @@
-class test_cfg #(int N = 10,int W = 8) extends uvm_object;
+class test_cfg extends uvm_object;
+
   `uvm_object_utils(test_cfg)
 
-  bit [N-1:0] int_in;
-  bit [N-1:0] int_enable;
-  bit [N-1:0] int_mask;
-  bit [N-1:0] int_clear;
-  bit         out_mode;
-  bit         out_polarity;
-  bit [W-1:0] pulse_width;
-
+  int Transaction_count;
+  int int_exp_pkt;
+  int reg_exp_pkt;
+  int out_exp_pkt;
+  int no_of_sources;
+  int int_in;
+  int int_enable;
+  int int_mask;
+  int out_mode;
+  int out_polarity;
+  int pulse_width;
+   
   function new(string name = "test_cfg");
     super.new(name);
-    int_in = 'h1;
-    int_enable = 'h1;
-    int_mask = 'h0;
-    int_clear = 'h0;
-    out_mode = 'h0;
-    out_polarity = 'h1;
-    pulse_width = 'h1;
+    //Transaction_count = 1;
+    //int_exp_pkt = 1;
+    //reg_exp_pkt = 12;
+    //out_exp_pkt = 1;
+    //no_of_sources = 10;
+    //int_in = 1;
+    //int_enable = 1;
+    //int_mask = 0;
+    //out_mode = 0;
+    //out_polarity = 1;
+    //pulse_width = 1;
   endfunction
 
   virtual function void load_from_plusargs();
-    void'($value$plusargs("int_in=%h", int_in));
-    void'($value$plusargs("int_enable=%h", int_enable));
-    void'($value$plusargs("int_mask=%h", int_mask));
-    void'($value$plusargs("int_clear=%h", int_clear));
-    void'($value$plusargs("out_mode=%h", out_mode));
-    void'($value$plusargs("out_polarity=%h", out_polarity));
-    void'($value$plusargs("pulse_width=%h", pulse_width));
+    if ($value$plusargs("TRANSACTION_COUNT=%d", Transaction_count))
+        `uvm_info(get_type_name(), $sformatf("Transaction_count found = %0d", Transaction_count), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("Transaction count not provided, using default = %0d", Transaction_count), UVM_LOW)
+
+    if ($value$plusargs("int_exp_pkt=%d", int_exp_pkt))
+        `uvm_info(get_type_name(), $sformatf("int_exp_pkt = %0d", int_exp_pkt), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("int_exp_pkt not provided, using default = %0d", int_exp_pkt), UVM_LOW)
+
+    if ($value$plusargs("reg_exp_pkt=%d", reg_exp_pkt))
+        `uvm_info(get_type_name(), $sformatf("reg_exp_pkt found = %0d", reg_exp_pkt), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("reg_exp_pkt not provided, using default = %0d", reg_exp_pkt), UVM_LOW)
+
+    if ($value$plusargs("out_exp_pkt=%d", out_exp_pkt))
+        `uvm_info(get_type_name(), $sformatf("out_exp_pkt found = %0d", out_exp_pkt), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("out_exp_pkt not provided, using default = %0d", out_exp_pkt), UVM_LOW)
+
+    if ($value$plusargs("no_of_sources=%d", no_of_sources))
+        `uvm_info(get_type_name(), $sformatf("no_of_sources found = %0d", no_of_sources), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("no_of_sources not provided, using default = %0d", no_of_sources), UVM_LOW)
+
+    if ($value$plusargs("int_in=%d", int_in))
+        `uvm_info(get_type_name(), $sformatf("int_in found = %0d", int_in), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("int_in not provided, using default = %0d", int_in), UVM_LOW)
+
+    if ($value$plusargs("int_enable=%d", int_enable))
+        `uvm_info(get_type_name(), $sformatf("int_enable found = %0d", int_enable), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("int_enable not provided, using default = %0d", int_enable), UVM_LOW)
+
+    if ($value$plusargs("int_mask=%d", int_mask))
+        `uvm_info(get_type_name(), $sformatf("int_mask found = %0d", int_mask), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("int_mask not provided, using default = %0d", int_mask), UVM_LOW)
+
+    if ($value$plusargs("out_mode=%d", out_mode))
+        `uvm_info(get_type_name(), $sformatf("out_mode found = %0d", out_mode), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("out_mode not provided, using default = %0d", out_mode), UVM_LOW)
+
+    if ($value$plusargs("out_polarity=%d", out_polarity))
+        `uvm_info(get_type_name(), $sformatf("out_polarity found = %0d", out_polarity), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("out_polarity not provided, using default = %0d", out_polarity), UVM_LOW)
+
+    if ($value$plusargs("pulse_width=%d", pulse_width))
+        `uvm_info(get_type_name(), $sformatf("pulse_width found = %0d", pulse_width), UVM_LOW)
+    else 
+        `uvm_info(get_type_name(), $sformatf("pulse_width not provided, using default = %0d", pulse_width), UVM_LOW)
   endfunction
 endclass

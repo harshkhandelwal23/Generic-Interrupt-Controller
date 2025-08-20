@@ -3,7 +3,7 @@ class sanity_seq extends uvm_sequence #(uvm_sequence_item);
 
   intc_reg_block reg_block;
   reg_seq_item reg_item;
-  interrupt_seq_item #(10) int_item;
+  interrupt_seq_item int_item;
 
   function new(string name = "sanity_seq");
     super.new(name);
@@ -15,7 +15,7 @@ class sanity_seq extends uvm_sequence #(uvm_sequence_item);
       `uvm_fatal("SANITY_SEQ", "Register block not set")
     end
     reg_item = reg_seq_item::type_id::create("reg_item");
-    int_item = interrupt_seq_item#(10)::type_id::create("int_item");
+    int_item = interrupt_seq_item::type_id::create("int_item");
   endtask
 
   virtual task body();

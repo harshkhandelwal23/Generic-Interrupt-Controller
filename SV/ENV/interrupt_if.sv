@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------------------------//
 // File Name : int_if.sv
 // ---------------------------------------------------------------------------------------------------//
-interface int_if #(parameter N = 10) (input logic clk,rst_n);
+interface int_if #(parameter int N = 10) (input logic clk,rst_n);
 
     //Input Signal declaration
     logic [N-1:0] int_in;

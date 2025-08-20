@@ -34,19 +34,16 @@ class interrupt_driver extends uvm_driver#(interrupt_seq_item);
       forever begin
         if (!vif.rst_n) 
           begin
-            //seq_item_port.get_next_item(req);
-            vif.cb_drv.int_in <= 0;
-            //seq_item_port.item_done();
+            vif.int_in <= 0;
             `uvm_info(get_type_name(), $sformatf("Driver has been reset %0t", $time), UVM_NONE);
-            //wait(vif.rst_n);
           end
         else
           begin
             //`uvm_info(get_type_name(), $sformatf("Before driver: get_next_item at time %0t", $time), UVM_NONE);
             seq_item_port.get_next_item(req);
             //`uvm_info(get_type_name(), $sformatf("After driver: get_next_item = %b at time %0t",req.int_in, $time), UVM_NONE);
-            @(posedge vif.cb_drv)
-            vif.cb_drv.int_in <= req.int_in;
+            @(posedge vif.clk)
+            vif.int_in <= req.int_in;
             `uvm_info(get_type_name(), $sformatf("before item done driving int_in = %0h",req.int_in),UVM_LOW);
             seq_item_port.item_done();
             //`uvm_info(get_type_name(), $sformatf("after item done int_in = %b",req.int_in),UVM_LOW);

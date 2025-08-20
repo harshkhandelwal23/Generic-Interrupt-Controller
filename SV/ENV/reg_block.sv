@@ -5,47 +5,35 @@
 // Individual Register Classes
 `include "uvm_macros.svh"
 import uvm_pkg::*;
-class INT_ENABLE #(int N = 10) extends uvm_reg;
+
+class INT_ENABLE extends uvm_reg;
   rand uvm_reg_field enable;
-  `uvm_object_utils(INT_ENABLE #(N))
+  `uvm_object_utils(INT_ENABLE)
 
   function new(string name = "INT_ENABLE");
-    super.new(name, N, UVM_NO_COVERAGE);
+    super.new(name, 10, UVM_NO_COVERAGE);
   endfunction
 
-  virtual function void build();
+  virtual function void build(int N);
       enable = uvm_reg_field::type_id::create("enable");
       enable.configure(this, N , 0, "RW", 0, 0, 1, 1, 0);
   endfunction
 endclass
 
-class INT_MASK #(int N = 10) extends uvm_reg;
+class INT_MASK extends uvm_reg;
   rand uvm_reg_field mask;
-  `uvm_object_utils(INT_MASK #(N))
+  `uvm_object_utils(INT_MASK)
 
   function new(string name = "INT_MASK");
-    super.new(name, N, UVM_NO_COVERAGE);
+    super.new(name, 10, UVM_NO_COVERAGE);
   endfunction
 
-  virtual function void build();
+  virtual function void build(int N);
     mask = uvm_reg_field::type_id::create("mask");
     mask.configure(this, N, 0, "RW", 0, 0, 1, 1, 0);
   endfunction
 endclass
 
-/*class INT_PRIORITY #(int N = 10, int P = 3) extends uvm_reg;
-  rand uvm_reg_field prior;
-  `uvm_object_utils(INT_PRIORITY)
-
-  function new(string name = "INT_PRIORITY");
-    super.new(name, N*P, UVM_NO_COVERAGE);
-  endfunction
-
-  virtual function void build();
-    prior = uvm_reg_field::type_id::create("prior");
-    prior.configure(this, N*P, 0, "RW", 0, 0, 1, 1, 0);
-  endfunction
-endclass*/
 class int_priority_reg #(int P = 3) extends uvm_reg;
   rand uvm_reg_field prior;
   `uvm_object_utils(int_priority_reg)
@@ -53,36 +41,36 @@ class int_priority_reg #(int P = 3) extends uvm_reg;
     super.new(name, P, UVM_NO_COVERAGE);
   endfunction
 
-  virtual function void build();
+  virtual function void build(int N);
     prior = uvm_reg_field::type_id::create("prior");
     prior.configure(this, P, 0, "RW", 0, 0, 1, 0, 0);
   endfunction
 endclass
 
 
-class INT_STATUS #(int N = 10) extends uvm_reg;
+class INT_STATUS extends uvm_reg;
   rand uvm_reg_field status;
   `uvm_object_utils(INT_STATUS)
 
   function new(string name = "INT_STATUS");
-    super.new(name, N, UVM_NO_COVERAGE);
+    super.new(name, 10, UVM_NO_COVERAGE);
   endfunction
 
-  virtual function void build();
+  virtual function void build(int N);
       status = uvm_reg_field::type_id::create("status");
       status.configure(this, N, 0, "RO", 0, 0, 1, 1, 0);
   endfunction
 endclass
 
-class INT_CLEAR #(int N = 10) extends uvm_reg;
+class INT_CLEAR extends uvm_reg;
   rand uvm_reg_field clr;
   `uvm_object_utils(INT_CLEAR)
 
   function new(string name = "INT_CLEAR");
-    super.new(name, N, UVM_NO_COVERAGE);
+    super.new(name, 10, UVM_NO_COVERAGE);
   endfunction
 
-  virtual function void build();
+  virtual function void build(int N);
       clr = uvm_reg_field::type_id::create("clr");
       clr.configure(this, N, 0, "WO", 0, 0, 1, 1, 0);
   endfunction
@@ -133,17 +121,16 @@ endclass
 // Register Block Class
 class intc_reg_block extends uvm_reg_block;
   `uvm_object_utils(intc_reg_block)
-  localparam int N = 10;
+  int N;
   rand INT_ENABLE int_enable;
   rand INT_MASK int_mask;
-  rand int_priority_reg priority_regs[N];
+  rand int_priority_reg priority_regs[];
   INT_STATUS int_status;
   rand INT_CLEAR int_clear;
   rand OUT_MODE out_mode;
   rand OUT_POLARITY out_polarity;
   rand PULSE_WIDTH pulse_width;
 
-  //localparam int N = 10;
   localparam int P = 3;
   localparam int W = 4;
 
@@ -151,32 +138,31 @@ class intc_reg_block extends uvm_reg_block;
     super.new(name, UVM_NO_COVERAGE);
   endfunction
 
-  virtual function void build();
-    int_enable = INT_ENABLE#(N)::type_id::create("int_enable");
-    int_enable.build();
+  virtual function void build(int N);
+    this.N = `no_of_sources; //passing the width to the registers
+    int_enable = INT_ENABLE::type_id::create("int_enable");
+    int_enable.build(N);
     int_enable.configure(this);
 
-    int_mask = INT_MASK#(N)::type_id::create("int_mask");
-    int_mask.build();
+    int_mask = INT_MASK::type_id::create("int_mask");
+    int_mask.build(N);
     int_mask.configure(this);
 
-    /*int_priority = INT_PRIORITY#(N,P)::type_id::create("int_priority");
-    int_priority.build();
-    int_priority.configure(this);*/
 
     // Priority (multiple registers)
+      priority_regs = new[N];
     for (int i = 0; i < N; i++) begin
       priority_regs[i] = int_priority_reg#(P)::type_id::create($sformatf("priority_%0d", i));
-      priority_regs[i].build();
+      priority_regs[i].build(N);
       priority_regs[i].configure(this);
     end
 
-    int_status = INT_STATUS#(N)::type_id::create("int_status");
-    int_status.build();
+    int_status = INT_STATUS::type_id::create("int_status");
+    int_status.build(N);
     int_status.configure(this);
 
-    int_clear = INT_CLEAR#(N)::type_id::create("int_clear");
-    int_clear.build();
+    int_clear = INT_CLEAR::type_id::create("int_clear");
+    int_clear.build(N);
     int_clear.configure(this);
 
     out_mode = OUT_MODE::type_id::create("out_mode");

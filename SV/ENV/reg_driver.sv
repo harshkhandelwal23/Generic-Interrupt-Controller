@@ -38,19 +38,23 @@ class reg_driver extends uvm_driver #(reg_seq_item);
     forever 
       begin
         if (!reg_vif.rst_n) 
+        //if (0) 
           begin 
+            //`uvm_info(get_type_name(), $sformatf("Before Reset"), UVM_MEDIUM)
             reg_vif.addr  <= 0; //Reset condition
             reg_vif.wr_en <= 0;
             reg_vif.rd_en <= 0;
             reg_vif.wdata <= 0;
+            //`uvm_info(get_type_name(), $sformatf("After Reset"), UVM_MEDIUM)
+            wait(reg_vif.rst_n);
           end
         else 
           begin
-            `uvm_info(get_type_name(), $sformatf("Before Get next item"), UVM_MEDIUM)
+            //`uvm_info(get_type_name(), $sformatf("Before Get next item"), UVM_MEDIUM)
             seq_item_port.get_next_item(item);
-            `uvm_info(get_type_name(), $sformatf("after Get next item = %0h %0h",item.addr,item.we), UVM_MEDIUM)
+            //`uvm_info(get_type_name(), $sformatf("after Get next item = %0h %0h",item.addr,item.we), UVM_MEDIUM)
             @(posedge reg_vif.clk);
-            `uvm_info(get_type_name(), $sformatf("after2 Get next item"), UVM_MEDIUM)
+            //`uvm_info(get_type_name(), $sformatf("after2 Get next item"), UVM_MEDIUM)
             reg_vif.addr  <= item.addr;
             reg_vif.wdata <= item.wdata;
             if (item.we) 
@@ -65,7 +69,7 @@ class reg_driver extends uvm_driver #(reg_seq_item);
               reg_vif.wr_en <= 0;
               //`uvm_info(get_type_name(), $sformatf("Sending READ to addr: 0x%0h", item.addr), UVM_MEDIUM)
               end
-            `uvm_info(get_type_name(), $sformatf("after3 Get next item"), UVM_MEDIUM)
+            //`uvm_info(get_type_name(), $sformatf("after3 Get next item"), UVM_MEDIUM)
             //@(reg_vif.driver_cb);
             // Capture rdata for READ
             //if (!item.we) 

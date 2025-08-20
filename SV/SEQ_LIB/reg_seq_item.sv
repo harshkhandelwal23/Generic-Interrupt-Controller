@@ -14,6 +14,7 @@ class reg_seq_item extends uvm_sequence_item;
     `uvm_field_int(addr,UVM_ALL_ON)
     `uvm_field_int(we,UVM_ALL_ON)
     `uvm_field_int(wdata,UVM_ALL_ON)
+    `uvm_field_int(rdata,UVM_ALL_ON)
   `uvm_object_utils_end
   
   //---------------------------------------

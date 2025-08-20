@@ -1,4 +1,4 @@
-class reg_test extends uvm_test;
+class reg_test extends base_test;
   `uvm_component_utils(reg_test)
 
   reg_seq reg_seq_h;

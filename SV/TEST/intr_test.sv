@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------------------------//
 // File Name : intr_test.sv
 // ---------------------------------------------------------------------------------------------------//
-class intr_test extends uvm_test;
+class intr_test extends base_test;
 
   //Factory Registration
   `uvm_component_utils(intr_test)

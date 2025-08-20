@@ -1,5 +1,5 @@
-class sanity_test extends base_test;
-  `uvm_component_utils(sanity_test)
+class single_int extends base_test;
+  `uvm_component_utils(single_int)
 
   interrupt_env env;
   reg_seq rseq;
@@ -8,7 +8,7 @@ class sanity_test extends base_test;
 
   test_cfg cfg;
 
-  function new(string name = "sanity_test", uvm_component parent = null);
+  function new(string name = "single_int", uvm_component parent = null);
     super.new(name, parent);
   endfunction
 
@@ -37,13 +37,10 @@ class sanity_test extends base_test;
       begin
         iseq = interrupt_seq::type_id::create("iseq");
         iseq.cfg = cfg;
-        iseq.start(env.agent.seqr); // Drive int_in
+        iseq.start(env.agent.seqr, this, .with_ { int_in =='b1; }); // Drive int_in
       end
       begin
-          $display("[%0t] hi Bhau bhai",$time);
-          //#10;
           @(posedge env.reg_agt.driver.reg_vif.clk);
-          $display("[%0t] hi hi bhau bhai",$time);
           repeat (cfg.Transaction_count) begin
             read_s = read_status_seq::type_id::create("read_s");
             //read_s.cfg = cfg;

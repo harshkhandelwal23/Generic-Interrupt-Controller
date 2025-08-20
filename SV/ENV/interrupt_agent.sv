@@ -30,10 +30,6 @@ class interrupt_agent extends uvm_agent;
 // ---------------------------------------------------------------------------------------------------//
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    // intf not requred
-    if (!uvm_config_db#(virtual int_if)::get(this, "", "vif", vif))
-      `uvm_fatal("AGENT", "vif not set")
- 
     if (get_is_active() == UVM_ACTIVE) 
       begin
         drv = interrupt_driver::type_id::create("drv", this);

@@ -11,33 +11,12 @@ import pkg::*;
 module tb_top;
 
   //clock declaration
+
   logic clk;
 
   //reset declaration
   logic rst_n;
-  //parameter N = 10;
- 
-  //Clock Generation
-  initial begin
-  forever #5 clk = ~clk; //TODO : variable frequency
-  end
 
-  initial 
-    begin
-      clk = 0;
-      rst_n = 1; //TODO: RESET ON FLY
-    end
- 
-//----------------------------------------------------------------------------------------------------//
-// Interface Instantiation
-// ---------------------------------------------------------------------------------------------------//
-  int_if #(10) intf (.clk(clk), .rst_n(rst_n));
-
-//----------------------------------------------------------------------------------------------------//
-// Register Interface Instantiation
-// ---------------------------------------------------------------------------------------------------//
-  reg_if reg_vif(.clk(clk), .rst_n(rst_n)); // Actual instance of the interface
- 
 //----------------------------------------------------------------------------------------------------//
 // DUT Instantiation : 
 // ---------------------------------------------------------------------------------------------------//
@@ -55,12 +34,29 @@ module tb_top;
       .wdata (reg_vif.wdata),
       .rdata (reg_vif.rdata)
       );
+//----------------------------------------------------------------------------------------------------//
+// Interface Instantiation
+// ---------------------------------------------------------------------------------------------------//
+  int_if #(10) intf (.clk(clk), .rst_n(rst_n));
 
-      /*initial begin
-          force dut.int_enable = 'h3FF;
-          force dut.int_mask = 'h3ff;
-          //dut.int_enable = 'h3FF;
-      end*/
+//----------------------------------------------------------------------------------------------------//
+// Register Interface Instantiation
+// ---------------------------------------------------------------------------------------------------//
+  reg_if reg_vif(.clk(clk), .rst_n(rst_n)); // Actual instance of the interface
+
+  //Clock Generation
+  initial begin
+  forever #5 clk = ~clk; //TODO : variable frequency
+  end
+
+  initial 
+    begin
+      clk = 0;
+      rst_n = 1; //TODO: RESET ON FLY
+      //#10 rst_n = 0;
+      //#20 rst_n = 1;
+    end
+ 
 //----------------------------------------------------------------------------------------------------//
 // Config_db Set and Run_test
 // ---------------------------------------------------------------------------------------------------//
@@ -69,19 +65,13 @@ module tb_top;
       uvm_config_db#(virtual int_if)::set(null, "*", "vif", intf);
       uvm_config_db#(virtual reg_if)::set(null, "*", "reg_vif", reg_vif);
     end
-      
+
   initial begin
     run_test();
   end 
 
-//----------------------------------------------------------------------------------------------------//
-// File Dumping and Waveform Generation
-// ---------------------------------------------------------------------------------------------------//
-// TODO should pass from command line
-  initial 
-    begin
-      $dumpfile("intr_contr.vcd");
-      $dumpvars(0, tb_top);
-    end
-
+  //initial begin
+      //#1000;
+      //$finish;
+  //end
 endmodule

@@ -1,6 +1,9 @@
+  //`define no_of_sources 11
 package pkg;
   `include "uvm_macros.svh"
   import uvm_pkg::*;
+  `define no_of_sources 10
+  `include "../TEST/test_cfg.sv"
   `include "../SEQ_LIB/interrupt_seq_item.sv"
   `include "../SEQ_LIB/interrupt_seq.sv"
   `include "reg_block.sv"
@@ -20,7 +23,9 @@ package pkg;
   `include "int_out_agent.sv"
   `include "intc_scoreboard.sv"
   `include "interrupt_env.sv"
-  `include "../SEQ_LIB/sanity_seq.sv"
+  `include "../TEST/base_test.sv"
+  //`include "../SEQ_LIB/sanity_seq.sv"
   `include "../TEST/sanity_test.sv"
-  `include "../TEST/reg_test.sv"
+  //`include "../TEST/single_int.sv"
+  //`include "../TEST/reg_test.sv"
 endpackage
