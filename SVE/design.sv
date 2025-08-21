@@ -60,7 +60,8 @@ module generic_intc #(
         end
     end
 
-    assign int_status = pending;
+    //assign int_status = pending;
+    assign int_status = int_in & int_enable ;
 
     // Priority arbitration
     always_comb begin
