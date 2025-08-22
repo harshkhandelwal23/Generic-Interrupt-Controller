@@ -56,8 +56,9 @@ make string=multi_ints_same_enabled seed=500 -C ../SCRIPTS/
 make string=multi_ints_diff_enabled seed=500 -C ../SCRIPTS/
 
 ### 2️⃣ Run Randomly
-a = user_oriented
-
-
-make TRANSACTION_COUNT=(a)  no_of_sources=10 int_in=(a) int_enable=(a) int_mask=(a) out_mode=0 out_polarity=1 pulse_width=1 WAVES= (1 or 0) TESTNAME=sanity_test seed=(a) -C ../SCRIPTS/
+a = user_oriented(positive values)
+b = 2*10-1(max currently)
+c = 2*10-1(max currently)
+d = 2*10-1(max currently)
+make TRANSACTION_COUNT=(a)  no_of_sources=10 int_in=(b) int_enable=(c) int_mask=(d) out_mode=0 out_polarity=1 pulse_width=1 WAVES=(1 or 0) TESTNAME=sanity_test seed=(random) -C ../SCRIPTS/
 
