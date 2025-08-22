@@ -23,6 +23,8 @@ class interrupt_env extends uvm_env;
 
   int no_of_sources;
 
+  //uvm_reg_predictor #(reg_seq_item) reg_predictor;
+
   function new(string name = "interrupt_env", uvm_component parent = null);
     super.new(name, parent);
   endfunction
@@ -30,6 +32,7 @@ class interrupt_env extends uvm_env;
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
 
+    //reg_predictor = uvm_reg_predictor #(reg_seq_item)::type_id::create("reg_predictor",this);
     // Create standard functional agent
     agent = interrupt_agent::type_id::create("agent", this);
     out_agent = int_out_agent::type_id::create("out_agent", this);
@@ -56,6 +59,11 @@ class interrupt_env extends uvm_env;
     out_agent.mon2.mon_out_ap.connect(scb.mon_out_ap);
     reg_agt.monitor.reg_ap.connect(scb.reg_ap);
     // Connect register block's map to reg_agent's sequencer and adapter
+    //reg_block.default_map.set_auto_predict(0);
     reg_block.default_map.set_sequencer(.sequencer(reg_agt.sequencer), .adapter(reg_adap) );
+    //reg_block.default_map.set_base_addr('h0);
+    //reg_predictor.map = reg_block.default_map;
+    //reg_predictor.adapter = reg_adap;
+    //reg_agt.monitor.reg_ap.connect(reg_predictor.bus_in);
   endfunction
 endclass

@@ -12,7 +12,7 @@ class reg_adapter extends uvm_reg_adapter;
     bus.we    = (rw.kind == UVM_WRITE) ? 1 : 0;
     bus.addr  = rw.addr;
     bus.wdata  = rw.data;
-    `uvm_info ("adapter", $sformatf ("reg2bus addr=0x%0h data=0x%0h kind=%s", bus.addr, bus.wdata, rw.kind.name()), UVM_DEBUG)
+    `uvm_info ("adapter", $sformatf ("reg2bus addr=0x%0h data=0x%0h kind=%s", bus.addr, bus.wdata, rw.kind.name()), UVM_NONE)
     return bus;
   endfunction
 
@@ -27,6 +27,6 @@ class reg_adapter extends uvm_reg_adapter;
     rw.data = bus.rdata;
     rw.kind = (bus.we) ? UVM_WRITE : UVM_READ;
     rw.status = UVM_IS_OK;
-    `uvm_info ("adapter", $sformatf("bus2reg : addr=0x%0h data=0x%0h kind=%s status=%s", rw.addr, rw.data, rw.kind.name(), rw.status.name()), UVM_DEBUG)
+    `uvm_info ("adapter", $sformatf("bus2reg : addr=0x%0h data=0x%0h kind=%s status=%s", rw.addr, rw.data, rw.kind.name(), rw.status.name()), UVM_NONE)
   endfunction
 endclass

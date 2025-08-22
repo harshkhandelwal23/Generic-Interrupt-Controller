@@ -40,13 +40,13 @@ class interrupt_monitor extends uvm_monitor;
     forever 
       begin
         @(posedge vif.clk);
-        if (in_transaction_seen >= cfg.Transaction_count)
+        if (in_transaction_seen == cfg.Transaction_count)
          begin
            `uvm_info(get_type_name(), $sformatf("Reached %0d Transactions, stopped sampling", in_transaction_seen), UVM_LOW)
            break;
          end
 
-        if(|vif.int_in)
+        if(vif.int_in)
           begin
             item = interrupt_seq_item#(`no_of_sources)::type_id::create("item");
             item.int_in = vif.int_in;
@@ -54,7 +54,9 @@ class interrupt_monitor extends uvm_monitor;
             mon_ap.write(item);
             in_transaction_seen++;
           end
+        //---------------------------CHECKER FOR INT_IN == 0----------------//
+        else if (vif.int_in == 0)
+            `uvm_error(get_type_name(), "This INT_IN value is not allowed")
       end
   endtask
 endclass
-//TODO : need to sample from second clock aand zero sources then fatal

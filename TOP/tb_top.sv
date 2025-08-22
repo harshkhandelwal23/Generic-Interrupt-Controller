@@ -5,9 +5,11 @@
 
 // TODO add into command
 `include "uvm_macros.svh"
+//`include "../SV/ENV/package.svh"
 import uvm_pkg::*;
 import pkg::*;
  
+//.`define no_of_sources 10
 module tb_top;
 
   //clock declaration
@@ -18,8 +20,9 @@ module tb_top;
   logic rst_n;
 
 //----------------------------------------------------------------------------------------------------//
-// DUT Instantiation : 
+// DUT Instantiation :  
 // ---------------------------------------------------------------------------------------------------//
+// TODO : Defines Passing
   reg_core #(.N(10),
       .P(3),
       .W(8) 

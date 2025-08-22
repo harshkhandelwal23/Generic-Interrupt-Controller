@@ -3,9 +3,6 @@ class test_cfg extends uvm_object;
   `uvm_object_utils(test_cfg)
 
   int Transaction_count;
-  int int_exp_pkt;
-  int reg_exp_pkt;
-  int out_exp_pkt;
   int no_of_sources;
   int int_in;
   int int_enable;
@@ -13,6 +10,7 @@ class test_cfg extends uvm_object;
   int out_mode;
   int out_polarity;
   int pulse_width;
+  int reg_count;
    
   function new(string name = "test_cfg");
     super.new(name);
@@ -34,21 +32,6 @@ class test_cfg extends uvm_object;
         `uvm_info(get_type_name(), $sformatf("Transaction_count found = %0d", Transaction_count), UVM_LOW)
     else 
         `uvm_info(get_type_name(), $sformatf("Transaction count not provided, using default = %0d", Transaction_count), UVM_LOW)
-
-    if ($value$plusargs("int_exp_pkt=%d", int_exp_pkt))
-        `uvm_info(get_type_name(), $sformatf("int_exp_pkt = %0d", int_exp_pkt), UVM_LOW)
-    else 
-        `uvm_info(get_type_name(), $sformatf("int_exp_pkt not provided, using default = %0d", int_exp_pkt), UVM_LOW)
-
-    if ($value$plusargs("reg_exp_pkt=%d", reg_exp_pkt))
-        `uvm_info(get_type_name(), $sformatf("reg_exp_pkt found = %0d", reg_exp_pkt), UVM_LOW)
-    else 
-        `uvm_info(get_type_name(), $sformatf("reg_exp_pkt not provided, using default = %0d", reg_exp_pkt), UVM_LOW)
-
-    if ($value$plusargs("out_exp_pkt=%d", out_exp_pkt))
-        `uvm_info(get_type_name(), $sformatf("out_exp_pkt found = %0d", out_exp_pkt), UVM_LOW)
-    else 
-        `uvm_info(get_type_name(), $sformatf("out_exp_pkt not provided, using default = %0d", out_exp_pkt), UVM_LOW)
 
     if ($value$plusargs("no_of_sources=%d", no_of_sources))
         `uvm_info(get_type_name(), $sformatf("no_of_sources found = %0d", no_of_sources), UVM_LOW)

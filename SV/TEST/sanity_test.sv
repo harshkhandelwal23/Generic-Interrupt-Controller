@@ -18,6 +18,7 @@ class sanity_test extends base_test;
     if (!uvm_config_db#(test_cfg)::get(this, "*", "test_cfg", cfg))
          `uvm_fatal(get_type_name(), "test_cfg not found")
     env.no_of_sources = cfg.no_of_sources;//to pass test config to the reg_block
+    //env.reg_agt.monitor.cfg.reg_count = cfg.reg_count;
   endfunction
 // ---------------------------------------------------------------------------------------------------//
 // End of Elaboration phase : for printing the topology
@@ -40,13 +41,11 @@ class sanity_test extends base_test;
         iseq.start(env.agent.seqr); // Drive int_in
       end
       begin
-          $display("[%0t] hi Bhau bhai",$time);
           //#10;
           @(posedge env.reg_agt.driver.reg_vif.clk);
-          $display("[%0t] hi hi bhau bhai",$time);
           repeat (cfg.Transaction_count) begin
             read_s = read_status_seq::type_id::create("read_s");
-            //read_s.cfg = cfg;
+            read_s.cfg = cfg;
             read_s.reg_block = env.reg_block;
             read_s.start(env.reg_agt.sequencer);
           end
@@ -56,6 +55,7 @@ class sanity_test extends base_test;
     //read_s.reg_block = env.reg_block;
     //read_s.start(env.reg_agt.sequencer);
     
+    //env.reg_agt.monitor.cfg.reg_count = cfg.reg_count;
     phase.phase_done.set_drain_time(this,30);
     phase.drop_objection(this);
   endtask

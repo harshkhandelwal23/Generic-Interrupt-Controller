@@ -17,6 +17,8 @@ class intc_scoreboard #(
   `uvm_component_utils(intc_scoreboard #( ADDR_WIDTH, DATA_WIDTH))
 
   test_cfg cfg; 
+
+  integer tracker_fd;  //file handle
 //-----------------------------------------------------------------------------
 // Analysis imports from agents
 //-----------------------------------------------------------------------------
@@ -66,10 +68,13 @@ class intc_scoreboard #(
 
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
+    tracker_fd = $fopen("tracker.txt","w");
+    if (tracker_fd == 0)
+      `uvm_fatal(get_type_name(), "Failed to open tracker.txt")
+    $fdisplay(tracker_fd, "Operation, REG_NAME. REG_ADDR, REG_DATA, simtime");
     if (!uvm_config_db#(test_cfg)::get(this, "", "test_cfg",cfg))
       begin
       `uvm_fatal(get_type_name(), "test_cfg not found in config DB")
-      `uvm_info(get_type_name(), $sformatf("Scoreboard Config: int_exp_pkt=%0d, reg_exp_pkt=%0d, out_exp_pkt=%0d, no_of_sources=%0d",cfg.int_exp_pkt, cfg.reg_exp_pkt, cfg.out_exp_pkt, cfg.no_of_sources),UVM_LOW)
       end
   endfunction
 
@@ -77,11 +82,40 @@ class intc_scoreboard #(
 // Handle register updates
 //-----------------------------------------------------------------------------
   virtual function void write_reg(reg_seq_item t);
+    string op, regname;
+    bit [DATA_WIDTH-1:0] data;
+    if (t.we) 
+      begin
+      op   = "WRITE";
+      data = t.wdata;
+      end 
+    else 
+      begin
+      op   = "READ";
+      data = t.rdata;
+      end
+    regname = get_reg_name(t.addr);
+    $fdisplay(tracker_fd, "%s, %s, 0x%0h, 0x%0h, @%0t",op, regname, t.addr, data, $time);
     // Use 8-bit addresses to match reg_seq_item.addr
     reg_act_pkt++;
     
     reg_queue.push_back(t); //Pushing the packet(reg) in the reg_queue
     `uvm_info("SCB",$sformatf("item addr = %0h",t.addr),UVM_NONE) 
+  endfunction
+
+//-----------------------------------------------------------------------------
+// function to get the register name to add in the tracker file
+//-----------------------------------------------------------------------------
+  virtual function string get_reg_name(bit [ADDR_WIDTH-1:0] addr);
+    case (addr)
+      8'h00: return "INT_ENABLE";
+      8'h04: return "INT_MASK";
+      8'h0C: return "OUT_MODE";
+      8'h10: return "OUT_POLARITY";
+      8'h14: return "PULSE_WIDTH";
+      8'h18: return "INT_STATUS";
+      default: return "UNKNOWN";
+    endcase
   endfunction
 
 //-----------------------------------------------------------------------------
@@ -230,22 +264,22 @@ class intc_scoreboard #(
 //-----------------------------------------------------------------------------
   virtual function void check_phase(uvm_phase phase);
     super.check_phase(phase);
-      if (cfg.int_exp_pkt !== int_act_pkt) begin
-        `uvm_error("SCB", $sformatf(" INT_IN Packet count mismatch! Expected: %0d, Actual: %0d",cfg.int_exp_pkt, int_act_pkt));
+      if (cfg.Transaction_count !== int_act_pkt) begin
+        `uvm_error("SCB", $sformatf(" INT_IN Packet count mismatch! Expected: %0d, Actual: %0d",cfg.Transaction_count, int_act_pkt));
       end else begin
-        `uvm_info("SCB", $sformatf("INT_IN Packet count matched : Expected: %0d, Actual: %0d",cfg.int_exp_pkt, int_act_pkt ), UVM_LOW);
+        `uvm_info("SCB", $sformatf("INT_IN Packet count matched : Expected: %0d, Actual: %0d",cfg.Transaction_count, int_act_pkt ), UVM_LOW);
       end
 
-      if (cfg.reg_exp_pkt !== reg_act_pkt) begin
-        `uvm_error("SCB", $sformatf("REG Packet count mismatch! Expected: %0d, Actual: %0d",cfg.reg_exp_pkt, reg_act_pkt));
+      if (cfg.reg_count !== reg_act_pkt) begin
+        `uvm_error("SCB", $sformatf("REG Packet count mismatch! Expected: %0d, Actual: %0d",cfg.reg_count, reg_act_pkt));
       end else begin
-        `uvm_info("SCB", $sformatf("REG Packet count matched : Expected: %0d, Actual: %0d",cfg.reg_exp_pkt, reg_act_pkt ), UVM_LOW);
+        `uvm_info("SCB", $sformatf("REG Packet count matched : Expected: %0d, Actual: %0d",cfg.reg_count, reg_act_pkt), UVM_LOW);
       end
 
-      if (cfg.out_exp_pkt !== out_act_pkt) begin
-        `uvm_error("SCB", $sformatf("INT_OUT Packet count mismatch! Expected: %0d, Actual: %0d",cfg.out_exp_pkt, out_act_pkt));
+      if (cfg.Transaction_count !== out_act_pkt) begin
+        `uvm_error("SCB", $sformatf("INT_OUT Packet count mismatch! Expected: %0d, Actual: %0d",cfg.Transaction_count, out_act_pkt));
       end else begin
-        `uvm_info("SCB", $sformatf("INT_OUT Packet count matched : Expected: %0d, Actual: %0d",cfg.out_exp_pkt, out_act_pkt ), UVM_LOW);
+        `uvm_info("SCB", $sformatf("INT_OUT Packet count matched : Expected: %0d, Actual: %0d",cfg.Transaction_count, out_act_pkt ), UVM_LOW);
       end
   endfunction
 
@@ -266,5 +300,11 @@ class intc_scoreboard #(
      `uvm_info("SCB", "----           TEST PASS           ----", UVM_NONE)
      `uvm_info("SCB", "---------------------------------------", UVM_NONE)
     end
+  endfunction
+
+  virtual function void final_phase(uvm_phase phase);
+   super.final_phase(phase);
+   if (tracker_fd)
+     $fclose(tracker_fd);
   endfunction
 endclass

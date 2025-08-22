@@ -1,7 +1,7 @@
 # --- Paths ---
 override path       ?= ./
 #override define     = /home/harsh-khandelwal/UVM/UVM_PROJECT/SV/ENV/defines.svh
-override package     = /home/harsh-khandelwal/UVM/UVM_PROJECT/SV/ENV/package.svh
+override package     = /home/harsh-khandelwal/UVM/UVM_PROJECT/SV/ENV/package.sv
 override interface   = /home/harsh-khandelwal/UVM/UVM_PROJECT/SV/ENV/interrupt_if.sv
 override reg_if      = /home/harsh-khandelwal/UVM/UVM_PROJECT/SV/ENV/reg_if.sv
 override rtl         = /home/harsh-khandelwal/UVM/UVM_PROJECT/SVE/reg_core.sv
@@ -10,17 +10,49 @@ override WAVES      ?= 0
 override TESTNAME   ?= sanity_test  # Default test name
 override seed       ?= 100          # Default seed
 override TRANSACTION_COUNT ?= 1
-override int_exp_pkt ?= 0
-override reg_exp_pkt ?= 0
-override out_exp_pkt ?= 0
-override no_of_sources ?= 0
-override int_in ?= 1
-override int_enable ?= 1
-override int_mask ?= 0
-override out_mode ?= 0
-override out_polarity ?= 1
-override pulse_width ?= 1
+no_of_sources ?= 0
+int_in ?= 1
+int_enable ?= 1
+int_mask ?= 0
+out_mode ?= 0
+out_polarity ?= 1
+pulse_width ?= 1
+override string ?= single_int
 
+# Select configuration based on string
+ifeq ($(string),single_int)
+    TRANSACTION_COUNT = 1
+    no_of_sources    = 10
+    int_in           = 1
+    int_enable       = 1
+    int_mask         = 0
+    out_mode         = 0
+    out_polarity     = 1
+    pulse_width      = 1
+    WAVES            = 1
+else ifeq ($(string),multi_ints_same_enabled)
+    TRANSACTION_COUNT = 1
+    no_of_sources    = 10
+    int_in           = 1023
+    int_enable       = 1023
+    int_mask         = 0
+    out_mode         = 0
+    out_polarity     = 1
+    pulse_width      = 1
+    WAVES            = 1
+else ifeq ($(string),multi_ints_diff_enabled)
+    TRANSACTION_COUNT = 1
+    no_of_sources    = 10
+    int_in           = 471
+    int_enable       = 7
+    int_mask         = 0
+    out_mode         = 0
+    out_polarity     = 1
+    pulse_width      = 1
+    WAVES            = 1
+else 
+    $(error Unknown string=$(string). Use Another string)
+endif
 # --- Sources to Compile ---
 SRC = $(package) $(interface) $(reg_if) $(rtl) $(top)
 
@@ -41,27 +73,21 @@ sim:
 
 run: 
 ifeq ($(WAVES),1)
-	vsim -c work.tb_opt +TRANSACTION_COUNT=$(TRANSACTION_COUNT) +int_exp_pkt=$(int_exp_pkt) +reg_exp_pkt=$(reg_exp_pkt) +out_exp_pkt=$(out_exp_pkt) +no_of_sources=$(no_of_sources) +int_in=$(int_in) +int_enable=$(int_enable) +int_mask=$(int_mask) +out_mode=$(out_mode) +out_polarity=$(out_polarity) +pulse_width=$(pulse_width) -sv_seed $(seed) -l run.log -do "add wave -r /*; run -all; quit;" +UVM_TESTNAME=$(TESTNAME) 
+	vsim -c work.tb_opt +TRANSACTION_COUNT=$(TRANSACTION_COUNT) +no_of_sources=$(no_of_sources) +int_in=$(int_in) +int_enable=$(int_enable) +int_mask=$(int_mask) +out_mode=$(out_mode) +out_polarity=$(out_polarity) +pulse_width=$(pulse_width) -sv_seed $(seed) -l run.log -do "add wave -r /*; run -all; quit;" +UVM_TESTNAME=$(TESTNAME) 
 else
-	vsim -c work.tb_opt +TRANSACTION_COUNT=$(TRANSACTION_COUNT) +int_exp_pkt=$(int_exp_pkt) +reg_exp_pkt=$(reg_exp_pkt) +out_exp_pkt=$(out_exp_pkt) +no_of_sources=$(no_of_sources) +int_in=$(int_in) +int_enable=$(int_enable) +int_mask=$(int_mask) +out_mode=$(out_mode) +out_polarity=$(out_polarity) +pulse_width=$(pulse_width) -sv_seed $(seed) -l run.log -do "run -all; quit;" +UVM_TESTNAME=$(TESTNAME)  
+	vsim -c work.tb_opt +TRANSACTION_COUNT=$(TRANSACTION_COUNT) +no_of_sources=$(no_of_sources) +int_in=$(int_in) +int_enable=$(int_enable) +int_mask=$(int_mask) +out_mode=$(out_mode) +out_polarity=$(out_polarity) +pulse_width=$(pulse_width) -sv_seed $(seed) -l run.log -do "run -all; quit;" +UVM_TESTNAME=$(TESTNAME)  
 endif
 
 # --- Scenario Target ---
 sanity_tc: all
 	@echo "Running Scenario 1"
-	$(MAKE) TRANSACTION_COUNT=1 int_exp_pkt=1 reg_exp_pkt=12 out_exp_pkt=1 \
-	        no_of_sources=10 int_in=1 int_enable=1 int_mask=0 out_mode=0 \
-	        out_polarity=1 pulse_width=1 WAVES=1 TESTNAME=sanity_test seed=$(seed) 
+	$(MAKE) string=single_int
 
 	@echo "Running Scenario 2"
-	$(MAKE) TRANSACTION_COUNT=1 int_exp_pkt=1 reg_exp_pkt=12 out_exp_pkt=1 \
-	        no_of_sources=10 int_in=471 int_enable=471 int_mask=0 out_mode=0 \
-	        out_polarity=1 pulse_width=1 WAVES=1 TESTNAME=sanity_test seed=$(seed)
+	$(MAKE) string=multi_ints_same_enabled
 
 	@echo "Running Scenario 3"
-	$(MAKE) TRANSACTION_COUNT=1 int_exp_pkt=1 reg_exp_pkt=12 out_exp_pkt=1 \
-	        no_of_sources=10 int_in=471 int_enable=7 int_mask=0 out_mode=0 \
-	        out_polarity=1 pulse_width=1 WAVES=1 TESTNAME=sanity_test seed=$(seed)
+	$(MAKE) string=multi_ints_diff_enabled
 
 # --- Clean Target ---
 clean:

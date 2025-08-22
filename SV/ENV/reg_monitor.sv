@@ -33,10 +33,10 @@ class reg_monitor extends uvm_monitor;
   //  reg_seq_item item3;
     forever 
       begin
-          //`uvm_info(get_type_name(), $sformatf("MONITOR1"), UVM_MEDIUM)
         @(posedge reg_vif.clk); // Sync with clock to ensure valid sampling
-         if (reg_transaction_seen >= 12*cfg.Transaction_count)//cfg.reg_exp_pkt)
+         if (reg_transaction_seen!= 0 && reg_transaction_seen == cfg.reg_count)//cfg.reg_exp_pkt)
          begin
+           `uvm_info(get_type_name(),$sformatf("CFG handle = %0p counter = %0d", cfg, cfg.reg_count),UVM_LOW)
            `uvm_info(get_type_name(), $sformatf("Reached %0d Transactions, stopped sampling", reg_transaction_seen), UVM_LOW)
            break;
          end

@@ -43,17 +43,7 @@ class int_out_monitor extends uvm_monitor;
     super.run_phase(phase);
     forever 
       begin
-      //@(posedge vif.clk iff (|vif.int_in));
-        @(posedge vif.clk);
-        if (out_transaction_seen >= cfg.Transaction_count)
-         begin
-           `uvm_info(get_type_name(), $sformatf("[OUT] Reached %0d Transactions, stopped sampling Tc = %0d", out_transaction_seen,cfg.Transaction_count), UVM_LOW)
-           break;
-         end
-      //`uvm_info(get_type_name(), $sformatf("after2 int_out monitor"), UVM_MEDIUM);
-      //@(vif.cb_mon.int_out);
-      //@(vif.int_in);
-        if (vif.int_in) 
+          @(vif.int_in);
           begin
             @(posedge vif.clk);
             item_out = interrupt_seq_item#(`no_of_sources)::type_id::create("item_out", this);
@@ -62,6 +52,11 @@ class int_out_monitor extends uvm_monitor;
             mon_out_ap.write(item_out);
             out_transaction_seen++;
           end
+          if (out_transaction_seen == cfg.Transaction_count)
+            begin
+              `uvm_info(get_type_name(), $sformatf("[OUT] Reached %0d Transactions, stopped sampling Tc = %0d", out_transaction_seen,cfg.Transaction_count), UVM_LOW)
+              break;
+            end
       end
   endtask
  
