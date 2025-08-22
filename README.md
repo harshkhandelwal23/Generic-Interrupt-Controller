@@ -57,5 +57,7 @@ make string=multi_ints_diff_enabled seed=500 -C ../SCRIPTS/
 
 ### 2️⃣ Run Randomly
 a = user_oriented
+
+
 make TRANSACTION_COUNT=(a)  no_of_sources=10 int_in=(a) int_enable=(a) int_mask=(a) out_mode=0 out_polarity=1 pulse_width=1 WAVES= (1 or 0) TESTNAME=sanity_test seed=(a) -C ../SCRIPTS/
 
